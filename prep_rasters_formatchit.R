@@ -19,17 +19,21 @@ predictors=stack(filelist)
 e <- extent(509566, 551074, 6322118, 6348959)
 predictors_crop=crop(predictors,e)
 
-# Split raster and split data frame
+# Split raster and convert to data frame
 
-SplitRas(Raster = predictors_crop$dtm_10m_unstretched, ppside = 4, nclus = 2)
+setwd(paste0(workingdirectory,"/","processing_formatchit","/"))
+
+SplitRas(Raster = predictors_crop, ppside = 4, nclus = 2)
 Files <- list.files(pattern = "SplitRas", full.names = T)
 
 DF <- SplitsToDataFrame(Splits = Files, ncores = 2)
 
-# Clean up the dataframe for matching
+# Clean up the data frame for matching
 
-colnames(DF)<-c("UTM_X","UTM_Y","dtm")
+colnames(DF)<-c("UTM_X","UTM_Y",filelist)
 write.csv2(DF,"forMatching.csv")
+
+DF_complete_cases=DF[complete.cases(DF),]
 
 
 
