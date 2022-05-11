@@ -76,6 +76,18 @@ nrow(DF_complete_cases[DF_complete_cases$Rewilding_PA_combined_10m_utm32.tif!=1,
 
 ### Modelling
 
+names(DF_complete_cases)<-c("UTM_X","UTM_Y","Nature_types","Size","AMP","TWI","MDI","DTM","NDVI_before","NDVI_max",
+                            "Habitat_nature","MPD","Rewilding_id","Treatment","RZC","Slope")
+
+rewilding_match_PSM_output <- matchit(Treatment~Nature_types + DTM + Slope + MDI + MPD + RZC + TWI + AMP,
+                                      data =DF_complete_cases, replace=FALSE, caliper = 0.25, method = "nearest", exact= "Nature_types", distance = "logit")
+
+plot(rewilding_match_PSM_output, type = "histogram")
+summary(rewilding_match_PSM_output, interactions = TRUE)
+
+saveRDS(rewilding_match_PSM_output,"rewilding_match_PSM_output.rds") 
+
+
 
 
 
