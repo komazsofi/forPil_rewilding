@@ -26,19 +26,19 @@ predictors_crop=crop(predictors,e)
 
 ### Split raster and convert to data frame
 
-setwd(paste0(workingdirectory,"/","processing_formatchit","/"))
+setwd(paste0(workingdirectory,"/","processing_withmachit","/"))
 
 SplitRas(Raster = predictors_crop, ppside = 4, nclus = 2)
 Files <- list.files(pattern = "SplitRas", full.names = T)
 
 DF <- SplitsToDataFrame(Splits = Files, ncores = 2)
 
-### Clean up the data frame for matching
+### Clean up the data frame for matching # move up renaming
 
 colnames(DF)<-c("UTM_X","UTM_Y",filelist)
 write.csv2(DF,"forMatching.csv")
 
-DF_complete_cases=DF[complete.cases(DF),]
+DF_complete_cases=DF[complete.cases(DF),] # this is not necessary
 
 # scientific clean up
 
@@ -51,7 +51,7 @@ DF_complete_cases$Article3_NATYPE_raster_10m_utm32.tif<-as.factor(DF_complete_ca
 DF_complete_cases$Article3_NATYPE_raster_10m_utm32.tif<-revalue(DF_complete_cases$Article3_NATYPE_raster_10m_utm32.tif,
                                                      c("1"="Freshwater meadow", "2"="Heathland", "3"="Bog", "4"="Grassland","5"="s","6"="Lake","7"="Coastal meadow"))
 
-# what type of rewilding
+# what type of rewilding # need to put the UTF-8
 DF_complete_cases$Rewilding_ID_inclNA_10m_utm32.tif<-as.factor(DF_complete_cases$Rewilding_ID_inclNA_10m_utm32.tif)
 
 DF_complete_cases$Rewilding_ID_inclNA_10m_utm32.tif<-revalue(DF_complete_cases$Rewilding_ID_inclNA_10m_utm32.tif,
@@ -74,18 +74,30 @@ levels(as.factor(DF_complete_cases$Rewilding_PA_combined_10m_utm32.tif))
 nrow(DF_complete_cases[DF_complete_cases$Rewilding_PA_combined_10m_utm32.tif==1,])
 nrow(DF_complete_cases[DF_complete_cases$Rewilding_PA_combined_10m_utm32.tif!=1,])
 
-### Modelling
+### Matching - modelling
 
 names(DF_complete_cases)<-c("UTM_X","UTM_Y","Nature_types","Size","AMP","TWI","MDI","DTM","NDVI_before","NDVI_max",
                             "Habitat_nature","MPD","Rewilding_id","Treatment","RZC","Slope")
 
-rewilding_match_PSM_output <- matchit(Treatment~Nature_types + DTM + Slope + MDI + MPD + RZC + TWI + AMP,
+# with NDVI
+rewilding_match_PSM_output <- matchit(Treatment~Nature_types + AMP + TWI + MDI + DTM + NDVI_before + Habitat_nature + RZC + Slope,
                                       data =DF_complete_cases, replace=FALSE, caliper = 0.25, method = "nearest", exact= "Nature_types", distance = "logit")
 
-plot(rewilding_match_PSM_output, type = "histogram")
-summary(rewilding_match_PSM_output, interactions = TRUE)
+
+plot(summary(rewilding_match_PSM_output))
+m.data <- match.data(rewilding_match_PSM_output)
 
 saveRDS(rewilding_match_PSM_output,"rewilding_match_PSM_output.rds") 
+
+# without NDVI
+rewilding_match_PSM_output_noNDVI <- matchit(Treatment~Nature_types + AMP + TWI + MDI + DTM + Habitat_nature + RZC + Slope,
+                                      data =DF_complete_cases, replace=FALSE, caliper = 0.25, method = "nearest", exact= "Nature_types", distance = "logit")
+
+
+plot(summary(rewilding_match_PSM_output_noNDVI))
+m.data <- match.data(rewilding_match_PSM_output_noNDVI)
+
+saveRDS(rewilding_match_PSM_output_noNDVI,"rewilding_match_PSM_output_noNDVI.rds") 
 
 
 
