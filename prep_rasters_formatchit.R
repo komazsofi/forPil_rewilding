@@ -8,29 +8,30 @@ library(plyr)
 
 library(MatchIt)
 
-source("C:/_Koma/GitHub/komazsofi/forPil_rewilding/Derek_SplitRaster.R") # need to be changed to the absolute path where the file is located
+source("D:/Zsofia/github_komazsofi/forPil_rewilding/Derek_SplitRaster.R") # need to be changed to the absolute path where the file is located
 
-workingdirectory="O:/Nat_Sustain-proj/_user/ZsofiaKoma_au700510/forPil/Project_1/"
+workingdirectory="D:/Zsofia/forPil_run/"
 setwd(workingdirectory)
 
 filelist=list.files(pattern = "*.tif")
 
 ### read in predictors
 
-predictors=stack(filelist)
+predictors_crop=stack(filelist)
 
 # make small area of interest for testing
 
-e <- extent(585697, 610859, 6216443, 6239524)
-predictors_crop=crop(predictors,e)
+#predictors=stack(filelist)
+#e <- extent(585697, 610859, 6216443, 6239524)
+#predictors_crop=crop(predictors,e)
 
 ### Split raster and convert to data frame
 
-setwd(paste0(workingdirectory,"/","processing_test2","/"))
+setwd(paste0(workingdirectory,"/","processing_full_test2","/"))
 
 old <- Sys.time()
 
-SplitRas(Raster = predictors_crop, ppside = 4, nclus = 2)
+SplitRas(Raster = predictors_crop, ppside = 4, nclus = 20)
 Files <- list.files(pattern = "SplitRas", full.names = T)
 
 new <- Sys.time() - old 
@@ -38,7 +39,7 @@ print(new)
 
 old2 <- Sys.time()
 
-DF_complete_cases <- SplitsToDataFrame(Splits = Files, ncores = 2)
+DF_complete_cases <- SplitsToDataFrame(Splits = Files, ncores = 20)
 
 new2 <- Sys.time() - old2 
 print(new2) 
@@ -66,13 +67,13 @@ DF_complete_cases$Rewilding_id<-as.factor(DF_complete_cases$Rewilding_id)
 
 DF_complete_cases$Rewilding_id<-revalue(DF_complete_cases$Rewilding_id,
                                         c("0"="Article 3",
-                                          "1"="Saksfjed-Hyllekrog", "2"="Tofte", "3"="Mellemområdet",
+                                          "1"="Saksfjed-Hyllekrog", "2"="Tofte", "3"="MellemomrÃ¥det",
                                           "4"="Molslaboratoriet","5"="Klise Nor","6"="Dovns Klint",
-                                          "7"="Almindingen", "8"="Bøtøskoven", "9"="Brandsø",
+                                          "7"="Almindingen", "8"="BÃ¸tÃ¸skoven", "9"="BrandsÃ¸",
                                           "10"="Skavenhus", "11"="Ulsvhale Nord", "12"="Ulvshale Syd",
                                           "13"="Klelund", "14"="Geding Kasted Mose", "15"="Merritskoven",
-                                          "16"="Flådet", "17"="Stengade", "18"="Tærø",
-                                          "19"="Næstved Øvelsesterræn", "20"="Nørrestrand Horsens"))
+                                          "16"="FlÃ¥det", "17"="Stengade", "18"="TÃ¦rÃ¸",
+                                          "19"="NÃ¦stved Ã˜velsesterrÃ¦n", "20"="NÃ¸rrestrand Horsens"))
 
 
 write.csv2(DF_complete_cases,"forMatching_cleaned.csv")
