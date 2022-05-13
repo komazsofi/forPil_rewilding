@@ -27,12 +27,13 @@ predictors_crop=stack(filelist)
 
 ### Split raster and convert to data frame
 
-setwd(paste0(workingdirectory,"/","processing_full_test2","/"))
+setwd(paste0(workingdirectory,"/","processing_full_test3","/"))
 
 old <- Sys.time()
 
-SplitRas(Raster = predictors_crop, ppside = 10, nclus = 20)
-Files <- list.files(pattern = "SplitRas", full.names = T)
+#SplitRas(Raster = predictors_crop, ppside = 10, nclus = 20)
+create_subsets(predictors_crop, c(25,25), fixed = TRUE, paste0(workingdirectory,"/","processing_full_test3","/"), targetformat = ".tif")
+Files <- list.files(pattern = "Tile", full.names = T)
 
 new <- Sys.time() - old 
 print(new) 
