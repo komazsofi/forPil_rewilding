@@ -1,7 +1,7 @@
 library(raster)
-require(parallel) 
-require(doParallel)
-require(foreach)
+library(parallel) 
+library(doParallel)
+library(foreach)
 
 library(tidyverse)
 library(plyr)
@@ -31,7 +31,7 @@ setwd(paste0(workingdirectory,"/","processing_full_test2","/"))
 
 old <- Sys.time()
 
-SplitRas(Raster = predictors_crop, ppside = 4, nclus = 20)
+SplitRas(Raster = predictors_crop, ppside = 10, nclus = 20)
 Files <- list.files(pattern = "SplitRas", full.names = T)
 
 new <- Sys.time() - old 
