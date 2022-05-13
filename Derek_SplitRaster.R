@@ -41,7 +41,7 @@ SplitRas <- function(Raster,ppside, nclus = 1){
 create_subsets <- function(inputraster, targetsize, fixed = TRUE, targetdir, targetformat = ".tif"){
   
   # read files located at the path of inputraster as a brick
-  temp_rstr <- brick(inputraster)
+  temp_rstr <- stack(inputraster)
   
   # read dimensions of read raster file
   targetsizeX <- targetsize[1]
