@@ -32,8 +32,7 @@ setwd(paste0(workingdirectory,"/","processing_full_test5","/"))
 old <- Sys.time()
 
 SplitRas(Raster = predictors_crop, ppside = 5, nclus = 1)
-#create_subsets(predictors_crop, c(350,350), fixed = TRUE, paste0(workingdirectory,"/","processing_full_test5","/"), targetformat = ".tif") # only working for one layer ....
-Files <- list.files(pattern = "Tile", full.names = T)
+Files <- list.files(pattern = "SplitRas", full.names = T)
 
 new <- Sys.time() - old 
 print(new) 
