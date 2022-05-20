@@ -92,7 +92,7 @@ nrow(DF_complete_cases[DF_complete_cases$Treatment!=1,])
 old3 <- Sys.time()
 
 rewilding_match_PSM_output <- matchit(Treatment~Nature_types + AMP + TWI + MDI + DTM + NDVI_before + Habitat_nature + RZC + Slope,
-                                      data =DF_complete_cases, replace=FALSE, caliper = 0.25, method = "nearest", exact= "Nature_types", distance = "logit")
+                                      data =DF_complete_cases, replace=FALSE, caliper = 0.25, method = "nearest", exact= "Nature_types", distance = "logit",verbose=TRUE)
 
 new3 <- Sys.time() - old3 
 print(new3) 
@@ -104,7 +104,7 @@ saveRDS(rewilding_match_PSM_output,"rewilding_match_PSM_output.rds")
 
 # without NDVI
 rewilding_match_PSM_output_noNDVI <- matchit(Treatment~Nature_types + AMP + TWI + MDI + DTM + Habitat_nature + RZC + Slope,
-                                      data =DF_complete_cases, replace=FALSE, caliper = 0.25, method = "nearest", exact= "Nature_types", distance = "logit")
+                                      data =DF_complete_cases, replace=FALSE, caliper = 0.25, method = "nearest", exact= "Nature_types", distance = "logit",verbose=TRUE)
 
 
 plot(summary(rewilding_match_PSM_output_noNDVI))
