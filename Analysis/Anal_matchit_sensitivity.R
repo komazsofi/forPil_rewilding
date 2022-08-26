@@ -48,11 +48,11 @@ print(new2)
 
 colnames(DF_complete_cases)<-c("UTM_X","UTM_Y",filelist)
 
-names(DF_complete_cases)<-c("UTM_X","UTM_Y","Size","AMP","TWI","MDI","DTM","NDVI_before","NDVI_max",
-                            "Nature_types","MPD","Rewilding_id","Treatment","RZC","Slope")
+names(DF_complete_cases)<-c("UTM_X","UTM_Y","Size","canopy_height","AMP","TWI","MDI","DTM","NDVI_before","NDVI_max",
+                            "Nature_types","MPD","Rewilding_id","Treatment","RZC","Slope","Shallow_summer_water")
 
-names(predictors_crop)<-c("Size","AMP","TWI","MDI","DTM","NDVI_before","NDVI_max",
-                            "Nature_types","MPD","Rewilding_id","Treatment","RZC","Slope")
+names(predictors_crop)<-c("Size","canopy_height","AMP","TWI","MDI","DTM","NDVI_before","NDVI_max",
+                          "Nature_types","MPD","Rewilding_id","Treatment","RZC","Slope","Shallow_summer_water")
 
 jpeg(paste(shpname,"predictors.jpg")) 
 plot(predictors_crop)
@@ -105,7 +105,7 @@ sink()
 
 old3 <- Sys.time()
 
-rewilding_match_PSM_output <- matchit(Treatment~AMP + TWI + MDI + DTM + NDVI_before + MPD + RZC + Slope,
+rewilding_match_PSM_output_wNDVI <- matchit(Treatment~AMP + TWI + MDI + DTM + NDVI_before + MPD + RZC + Slope,
                                       data =DF_complete_cases, replace=FALSE, caliper = 0.25, method = "nearest", exact= "Nature_types", distance = "logit",verbose=TRUE)
 
 new3 <- Sys.time() - old3 
@@ -114,7 +114,7 @@ print(new3)
 plot(summary(rewilding_match_PSM_output))
 m.data <- match.data(rewilding_match_PSM_output)
 
-saveRDS(rewilding_match_PSM_output,paste0("rewilding_match_PSM_output_",shpname,".rds")) 
+saveRDS(rewilding_match_PSM_output_wNDVI,paste0("rewilding_match_PSM_output_wNDVI",shpname,".rds")) 
 
 # without NDVI
 rewilding_match_PSM_output_noNDVI<- matchit(Treatment~AMP + TWI + MDI + DTM +  MPD + RZC + Slope,
@@ -124,4 +124,29 @@ rewilding_match_PSM_output_noNDVI<- matchit(Treatment~AMP + TWI + MDI + DTM +  M
 plot(summary(rewilding_match_PSM_output_noNDVI))
 m.data <- match.data(rewilding_match_PSM_output_noNDVI)
 
-saveRDS(rewilding_match_PSM_output_noNDVI,paste0("rewilding_match_PSM_output_noNDVI_",shpname,".rds"))
+saveRDS(rewilding_match_PSM_output_noNDVI,paste0("rewilding_match_PSM_output_noNDVI",shpname,".rds"))
+
+# with NDVI with DSM
+
+old3 <- Sys.time()
+
+rewilding_match_PSM_output_wNDVI_wDSM <- matchit(Treatment~AMP + TWI + MDI + DTM + NDVI_before + MPD + RZC + Slope+canopy_height,
+                                      data =DF_complete_cases, replace=FALSE, caliper = 0.25, method = "nearest", exact= "Nature_types", distance = "logit",verbose=TRUE)
+
+new3 <- Sys.time() - old3 
+print(new3) 
+
+plot(summary(rewilding_match_PSM_output))
+m.data <- match.data(rewilding_match_PSM_output)
+
+saveRDS(rewilding_match_PSM_output_wNDVI_wDSM,paste0("rewilding_match_PSM_output_wNDVI_wDSM",shpname,".rds")) 
+
+# without NDVI with DSM
+rewilding_match_PSM_output_noNDVI_wDSM<- matchit(Treatment~AMP + TWI + MDI + DTM +  MPD + RZC + Slope+canopy_height,
+                                            data =DF_complete_cases, replace=FALSE, caliper = 0.25, method = "nearest", exact= "Nature_types", distance = "logit",verbose=TRUE)
+
+
+plot(summary(rewilding_match_PSM_output_noNDVI_wDSM))
+m.data <- match.data(rewilding_match_PSM_output_noNDVI_wDSM)
+
+saveRDS(rewilding_match_PSM_output_noNDVI_wDSM,paste0("rewilding_match_PSM_output_noNDVI_wDSM",shpname,".rds"))
