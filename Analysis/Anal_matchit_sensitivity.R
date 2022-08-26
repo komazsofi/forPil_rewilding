@@ -11,7 +11,7 @@ library(MatchIt)
 
 source("O:/Nat_Sustain-proj/_user/ZsofiaKoma_au700510/forPil/__code/forPil_rewilding/Derek_SplitRaster.R") # need to be changed to the absolute path where the file is located
 
-shpname="mols_5km"
+shpname="mols_10km"
 
 workingdirectory="O:/Nat_Sustain-proj/_user/ZsofiaKoma_au700510/forPil/_InputLayers/"
 setwd(workingdirectory)
@@ -111,18 +111,12 @@ rewilding_match_PSM_output_wNDVI <- matchit(Treatment~AMP + TWI + MDI + DTM + ND
 new3 <- Sys.time() - old3 
 print(new3) 
 
-plot(summary(rewilding_match_PSM_output))
-m.data <- match.data(rewilding_match_PSM_output)
-
 saveRDS(rewilding_match_PSM_output_wNDVI,paste0("rewilding_match_PSM_output_wNDVI",shpname,".rds")) 
 
 # without NDVI
 rewilding_match_PSM_output_noNDVI<- matchit(Treatment~AMP + TWI + MDI + DTM +  MPD + RZC + Slope,
                                             data =DF_complete_cases, replace=FALSE, caliper = 0.25, method = "nearest", exact= "Nature_types", distance = "logit",verbose=TRUE)
 
-
-plot(summary(rewilding_match_PSM_output_noNDVI))
-m.data <- match.data(rewilding_match_PSM_output_noNDVI)
 
 saveRDS(rewilding_match_PSM_output_noNDVI,paste0("rewilding_match_PSM_output_noNDVI",shpname,".rds"))
 
@@ -136,17 +130,10 @@ rewilding_match_PSM_output_wNDVI_wDSM <- matchit(Treatment~AMP + TWI + MDI + DTM
 new3 <- Sys.time() - old3 
 print(new3) 
 
-plot(summary(rewilding_match_PSM_output))
-m.data <- match.data(rewilding_match_PSM_output)
-
 saveRDS(rewilding_match_PSM_output_wNDVI_wDSM,paste0("rewilding_match_PSM_output_wNDVI_wDSM",shpname,".rds")) 
 
 # without NDVI with DSM
 rewilding_match_PSM_output_noNDVI_wDSM<- matchit(Treatment~AMP + TWI + MDI + DTM +  MPD + RZC + Slope+canopy_height,
                                             data =DF_complete_cases, replace=FALSE, caliper = 0.25, method = "nearest", exact= "Nature_types", distance = "logit",verbose=TRUE)
-
-
-plot(summary(rewilding_match_PSM_output_noNDVI_wDSM))
-m.data <- match.data(rewilding_match_PSM_output_noNDVI_wDSM)
 
 saveRDS(rewilding_match_PSM_output_noNDVI_wDSM,paste0("rewilding_match_PSM_output_noNDVI_wDSM",shpname,".rds"))
