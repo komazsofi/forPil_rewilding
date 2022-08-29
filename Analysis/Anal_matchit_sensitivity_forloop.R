@@ -9,7 +9,7 @@ library(plyr)
 
 library(MatchIt)
 
-source("O:/Nat_Sustain-proj/_user/ZsofiaKoma_au700510/forPil/__code/forPil_rewilding/Derek_SplitRaster.R") # need to be changed to the absolute path where the file is located
+#source("O:/Nat_Sustain-proj/_user/ZsofiaKoma_au700510/forPil/__code/forPil_rewilding/Derek_SplitRaster.R") # need to be changed to the absolute path where the file is located
 
 shpname=c("mols_50km","Dovn_5km","Dovn_10km","Dovn_50km","klelund_5km","klelund_10km","klelund_50km")
 
@@ -34,18 +34,11 @@ for (i in 1:length(shpname)) {
   
   old <- Sys.time()
   
-  SplitRas(Raster = predictors_crop, ppside = 5, nclus = 1)
-  Files <- list.files(pattern = "SplitRas", full.names = T)
+  Temp <- as.data.frame(predictors_crop, row.names = NULL, col.names = NULL, xy =TRUE)
+  DF_complete_cases <- Temp[complete.cases(Temp),]
   
   new <- Sys.time() - old 
   print(new) 
-  
-  old2 <- Sys.time()
-  
-  DF_complete_cases <- SplitsToDataFrame(Splits = Files, ncores = 3)
-  
-  new2 <- Sys.time() - old2 
-  print(new2) 
   
   ### Clean up the data frame for matching 
   
