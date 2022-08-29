@@ -11,7 +11,8 @@ library(MatchIt)
 
 #source("O:/Nat_Sustain-proj/_user/ZsofiaKoma_au700510/forPil/__code/forPil_rewilding/Derek_SplitRaster.R") # need to be changed to the absolute path where the file is located
 
-shpname=c("mols_50km","Dovn_5km","Dovn_10km","Dovn_50km","klelund_5km","klelund_10km","klelund_50km")
+#shpname=c("mols_5km","mols_10km","mols_50km","Dovn_5km","Dovn_10km","Dovn_50km","klelund_5km","klelund_10km","klelund_50km")
+shpname=c("mols_5km")
 
 for (i in 1:length(shpname)) {
   print(shpname[i])
@@ -44,11 +45,11 @@ for (i in 1:length(shpname)) {
   
   colnames(DF_complete_cases)<-c("UTM_X","UTM_Y",filelist)
   
-  names(DF_complete_cases)<-c("UTM_X","UTM_Y","Size","canopy_height","AMP","TWI","MDI","DTM","NDVI_before","NDVI_max",
-                              "Nature_types","MPD","Rewilding_id","Treatment","RZC","Slope","Shallow_summer_water")
+  names(DF_complete_cases)<-c("UTM_X","UTM_Y","Nature_types","Size","canopy_height","AMP","TWI","MDI","DTM","NDVI_before","NDVI_max",
+                              "MPD","Rewilding_id","Treatment","RZC","Slope","Shallow_summer_water")
   
-  names(predictors_crop)<-c("Size","canopy_height","AMP","TWI","MDI","DTM","NDVI_before","NDVI_max",
-                            "Nature_types","MPD","Rewilding_id","Treatment","RZC","Slope","Shallow_summer_water")
+  names(predictors_crop)<-c("Nature_types","Size","canopy_height","AMP","TWI","MDI","DTM","NDVI_before","NDVI_max",
+                            "MPD","Rewilding_id","Treatment","RZC","Slope","Shallow_summer_water")
   
   jpeg(paste(shpname[i],"predictors.jpg")) 
   plot(predictors_crop)
@@ -85,13 +86,13 @@ for (i in 1:length(shpname)) {
   
   sink(paste0("Metadata",shpname[i],".txt"))
   
-  dim(DF_complete_cases)
-  str(DF_complete_cases)  
-  levels(as.factor(DF_complete_cases$Treatment))
-  nrow(DF_complete_cases[DF_complete_cases$Treatment==1,])
-  nrow(DF_complete_cases[DF_complete_cases$Treatment!=1,])
+  print(dim(DF_complete_cases))
+  print(str(DF_complete_cases))  
+  print(levels(as.factor(DF_complete_cases$Treatment)))
+  print(nrow(DF_complete_cases[DF_complete_cases$Treatment==1,]))
+  print(nrow(DF_complete_cases[DF_complete_cases$Treatment!=1,]))
   
-  summary(DF_complete_cases)
+  print(summary(DF_complete_cases))
   
   sink()
   
